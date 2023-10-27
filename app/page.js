@@ -10,21 +10,6 @@ import {
 } from "firebase/firestore";
 import { firebaseApp, TARGET_COLLECTION_NAME, db } from "../libs/firebase";
 
-const getCurrentTime = (date) => {
-  return (
-    date.getFullYear() +
-    "/" +
-    ("0" + (date.getMonth() + 1)).slice(-2) +
-    "/" +
-    ("0" + date.getDate()).slice(-2) +
-    " " +
-    ("0" + date.getHours()).slice(-2) +
-    ":" +
-    ("0" + date.getMinutes()).slice(-2) +
-    ":" +
-    ("0" + date.getSeconds()).slice(-2)
-  );
-};
 export default function Home() {
   const [text, setText] = useState();
   const [currentUser, setCurrentUser] = useState("いけだ");
@@ -47,9 +32,16 @@ export default function Home() {
         data = doc.data();
         collectionMessages.push(data);
       });
-      setChatList(collectionMessages);
+      const sortedMessages = collectionMessages.sort(function (a, b) {
+        return a.createdAt - b.createdAt;
+      });
+      setChatList(sortedMessages);
     });
   }, []);
+
+  const element = document.documentElement;
+  const bottom = element.scrollHeight - element.clientHeight;
+  window.scroll(0, bottom);
 
   const submitText = async () => {
     try {
@@ -65,13 +57,6 @@ export default function Home() {
       console.log(error);
     }
   };
-
-  const imagePath =
-    currentUser === "しずや"
-      ? "/person.jpg"
-      : currentUser === "いけだ"
-      ? "/person2.jpg"
-      : "/person3.jpg";
 
   return (
     <main className="bg-red-100 h-screen">
