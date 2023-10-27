@@ -39,9 +39,11 @@ export default function Home() {
     });
   }, []);
 
-  const element = document.documentElement;
-  const bottom = element.scrollHeight - element.clientHeight;
-  window.scroll(0, bottom);
+  if (typeof window === "object") {
+    const element = document.documentElement;
+    const bottom = element.scrollHeight - element.clientHeight;
+    window.scroll(0, bottom);
+  }
 
   const submitText = async () => {
     try {
